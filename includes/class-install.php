@@ -20,10 +20,13 @@ class Tappy_CB_Install {
             expires_at DATETIME NULL,
             created_at DATETIME NOT NULL,
             updated_at DATETIME NOT NULL,
+        
             PRIMARY KEY (id),
+        
             KEY user_id (user_id),
-            KEY order_id (order_id),
+            UNIQUE KEY order_id (order_id),
             KEY status (status)
+        
         ) $charset;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
