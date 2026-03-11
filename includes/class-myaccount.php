@@ -62,12 +62,21 @@ class Tappy_CB_MyAccount {
                 ? wc_format_datetime(wc_string_to_datetime($cb->expires_at))
                 : '—';
 
+            $status_labels = array(
+                'available' => 'Disponível',
+                'used'      => 'Utilizado',
+                'expired'   => 'Expirado',
+                'cancelled' => 'Cancelado',
+            );
+
+            $status_label = $status_labels[$cb->status] ?? $cb->status;
+
             echo '<tr>';
             echo '<td>#' . esc_html($cb->order_id) . '</td>';
             echo '<td>' . esc_html(wc_format_datetime($order->get_date_created())) . '</td>';
             echo '<td>' . wc_price($cb->amount) . '</td>';
             echo '<td>' . wc_price($cb->amount_used) . '</td>';
-            echo '<td>' . esc_html($cb->status) . '</td>';
+            echo '<td>' . esc_html($status_label) . '</td>';
             echo '<td>' . esc_html($expires) . '</td>';
             echo '<td><a class="woocommerce-button button view" href="' . esc_url($order->get_view_order_url()) . '">Visualizar</a></td>';
             echo '</tr>';
