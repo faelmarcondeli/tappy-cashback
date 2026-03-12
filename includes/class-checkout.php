@@ -35,6 +35,17 @@ class Tappy_CB_Checkout {
             20,
             2
         );
+
+        // Mostra cashback previsto abaixo do total do pedido (carrinho e checkout)
+        add_action(
+            'woocommerce_cart_totals_after_order_total',
+            [$this, 'render_future_cashback_total_row']
+        );
+
+        add_action(
+            'woocommerce_review_order_after_order_total',
+            [$this, 'render_future_cashback_total_row']
+        );
     }
 
     /*
@@ -141,6 +152,39 @@ class Tappy_CB_Checkout {
             . '</div>';
 
         return $label . $cart_subtotal;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR CASHBACK FUTURO NO TOTAL DO PEDIDO
+    |--------------------------------------------------------------------------
+    */
+
+    public function render_future_cashback_total_row() {
+
+        if (get_option('tappy_cashback_enabled') !== 'yes') {
+            return;
+        }
+
+        $percentage = floatval(get_option('tappy_cashback_percentage'));
+
+        if ($percentage <= 0) {
+            return;
+        }
+
+        $totals = WC()->cart ? WC()->cart->get_totals() : null;
+        $order_total = $totals['total'] ?? 0;
+
+        if ($order_total <= 0) {
+            return;
+        }
+
+        $future_cashback = ($order_total * $percentage) / 100;
+
+        echo '<tr class="order-total tappy-future-cashback-next">';
+        echo '<th>' . esc_html__('Cashback para a próxima compra', 'tappy') . '</th>';
+        echo '<td data-title="' . esc_attr__('Cashback para a próxima compra', 'tappy') . '"><strong>' . wc_price($future_cashback) . '</strong></td>';
+        echo '</tr>';
     }
 
     /*
