@@ -27,7 +27,6 @@ delete_option('tappy_cashback_enabled');
 delete_option('tappy_cashback_percentage');
 delete_option('tappy_cashback_expiration');
 delete_option('tappy_cashback_cron_interval');
-delete_option('tappy_cb_db_version');
 
 
 /*
@@ -37,7 +36,6 @@ delete_option('tappy_cb_db_version');
 */
 
 wp_clear_scheduled_hook('tappy_cb_daily_expiration');
-wp_clear_scheduled_hook('tappy_cb_daily_notifications');
 
 
 /*

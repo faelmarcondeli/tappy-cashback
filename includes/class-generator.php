@@ -72,7 +72,7 @@ class Tappy_CB_Generator {
             $expires = date('Y-m-d H:i:s', strtotime("+{$days} days"));
         }
 
-        $inserted = $wpdb->insert($table, [
+        $wpdb->insert($table, [
             'user_id' => $order->get_user_id(),
             'order_id' => $order_id,
             'amount' => $amount,
@@ -81,8 +81,6 @@ class Tappy_CB_Generator {
             'created_at' => current_time('mysql'),
             'updated_at' => current_time('mysql'),
         ]);
-
-        $cashback_id = $inserted ? (int) $wpdb->insert_id : 0;
 
         /*
         |--------------------------------------------------------------------------
@@ -99,20 +97,5 @@ class Tappy_CB_Generator {
         */
 
         wp_cache_delete($lock_key, 'tappy_cashback');
-
-        /*
-        |--------------------------------------------------------------------------
-        | DISPARA E-MAIL DE CASHBACK GERADO
-        |--------------------------------------------------------------------------
-        */
-
-        if ($cashback_id && class_exists('Tappy_CB_Emails')) {
-            Tappy_CB_Emails::trigger_generated(
-                $cashback_id,
-                $order->get_user_id(),
-                $amount,
-                $expires
-            );
-        }
     }
 }

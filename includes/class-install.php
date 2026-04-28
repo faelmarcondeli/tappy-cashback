@@ -18,7 +18,6 @@ class Tappy_CB_Install {
             amount_used DECIMAL(15,4) DEFAULT 0,
             status VARCHAR(20) NOT NULL DEFAULT 'available',
             expires_at DATETIME NULL,
-            notified_days VARCHAR(100) DEFAULT '',
             created_at DATETIME NOT NULL,
             updated_at DATETIME NOT NULL,
         
@@ -32,7 +31,5 @@ class Tappy_CB_Install {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
-
-        update_option('tappy_cb_db_version', '1.2.0');
     }
 }
