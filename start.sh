@@ -10,9 +10,11 @@ fi
 
 # Sync plugin source files from root into the WordPress plugins directory
 mkdir -p "$PLUGIN_DIR/includes"
+mkdir -p "$PLUGIN_DIR/template/emails"
 cp "$WORKSPACE/tappy-cashback-pro.php" "$PLUGIN_DIR/" 2>/dev/null || true
 cp "$WORKSPACE/uninstall.php" "$PLUGIN_DIR/" 2>/dev/null || true
 cp "$WORKSPACE/includes/"*.php "$PLUGIN_DIR/includes/" 2>/dev/null || true
+cp "$WORKSPACE/template/emails/"*.php "$PLUGIN_DIR/template/emails/" 2>/dev/null || true
 echo "Plugin files synced."
 
 # Update WordPress URLs to match the current Replit domain

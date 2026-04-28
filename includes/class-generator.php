@@ -82,6 +82,8 @@ class Tappy_CB_Generator {
             'updated_at' => current_time('mysql'),
         ]);
 
+        $cashback_id = (int) $wpdb->insert_id;
+
         /*
         |--------------------------------------------------------------------------
         | LIMPA CACHE DO SALDO
@@ -89,6 +91,16 @@ class Tappy_CB_Generator {
         */
 
         Tappy_CB_Database::clear_balance_cache($order->get_user_id());
+
+        /*
+        |--------------------------------------------------------------------------
+        | DISPARA E-MAIL DE CASHBACK GERADO
+        |--------------------------------------------------------------------------
+        */
+
+        if ($cashback_id) {
+            do_action('tappy_cb_send_generated_email', $cashback_id);
+        }
 
         /*
         |--------------------------------------------------------------------------

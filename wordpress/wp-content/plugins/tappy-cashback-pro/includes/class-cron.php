@@ -9,6 +9,31 @@ class Tappy_CB_Cron {
         add_action('tappy_cb_daily_expiration', [$this, 'expire_cashbacks']);
 
         $this->ensure_schedule();
+        $this->ensure_daily_reminders_schedule();
+    }
+
+    private function ensure_daily_reminders_schedule() {
+
+        $hook = 'tappy_cb_daily_reminders';
+        $next = wp_next_scheduled($hook);
+
+        if ($next) {
+            // Migra agendamentos antigos que foram feitos no fuso do servidor
+            // (ex.: instalações criadas antes da correção de timezone) para o
+            // fuso configurado em "Configurações > Geral".
+            $hour_local = (int) wp_date('G', $next);
+            if ($hour_local !== 8) {
+                wp_unschedule_event($next, $hook);
+                $next = false;
+            }
+        }
+
+        if (!$next) {
+            // Roda 1x ao dia. Primeira execução agendada para o próximo
+            // 08:00 no fuso configurado em "Configurações > Geral".
+            $first = Tappy_CB_Emails::next_daily_run_timestamp(8);
+            wp_schedule_event($first, 'daily', $hook);
+        }
     }
 
     private function get_interval_slug() {

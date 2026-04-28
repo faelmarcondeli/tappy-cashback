@@ -46,6 +46,7 @@ require_once TAPPY_CB_PATH . 'includes/class-generator.php';
 require_once TAPPY_CB_PATH . 'includes/class-antifraud.php';
 require_once TAPPY_CB_PATH . 'includes/class-checkout.php';
 require_once TAPPY_CB_PATH . 'includes/class-myaccount.php';
+require_once TAPPY_CB_PATH . 'includes/class-emails.php';
 require_once TAPPY_CB_PATH . 'includes/class-cron.php';
 require_once TAPPY_CB_PATH . 'includes/class-admin-list-table.php';
 require_once TAPPY_CB_PATH . 'includes/class-admin-page.php';
@@ -94,6 +95,14 @@ register_activation_hook(__FILE__, function () {
 
     }
 
+    if (!wp_next_scheduled('tappy_cb_daily_reminders')) {
+        wp_schedule_event(
+            Tappy_CB_Emails::next_daily_run_timestamp(8),
+            'daily',
+            'tappy_cb_daily_reminders'
+        );
+    }
+
     add_rewrite_endpoint('cashback', EP_ROOT | EP_PAGES);
     flush_rewrite_rules();
 
@@ -109,6 +118,7 @@ register_activation_hook(__FILE__, function () {
 register_deactivation_hook(__FILE__, function () {
 
     wp_clear_scheduled_hook('tappy_cb_daily_expiration');
+    wp_clear_scheduled_hook('tappy_cb_daily_reminders');
 
     flush_rewrite_rules();
 
@@ -130,6 +140,7 @@ class Tappy_Cashback_Pro {
         new Tappy_CB_Antifraud();
         new Tappy_CB_Checkout();
         new Tappy_CB_MyAccount();
+        new Tappy_CB_Emails();
         new Tappy_CB_Cron();
         new Tappy_CB_Admin_Page();
 
@@ -138,5 +149,6 @@ class Tappy_Cashback_Pro {
 }
 
 add_action('plugins_loaded', function () {
+    Tappy_CB_Install::maybe_upgrade();
     new Tappy_Cashback_Pro();
 });
