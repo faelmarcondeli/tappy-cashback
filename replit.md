@@ -17,10 +17,19 @@ This is a **WordPress plugin**, not a standalone application. It runs inside a f
 │   ├── class-checkout.php
 │   ├── class-cron.php
 │   ├── class-database.php
+│   ├── class-emails.php        ← Orchestrator: registers WC_Email classes, claim+balance for reminders
 │   ├── class-generator.php
 │   ├── class-install.php
 │   ├── class-myaccount.php
-│   └── class-settings.php
+│   ├── class-settings.php
+│   └── emails/                 ← WC_Email subclasses (appear in WC > Settings > Emails)
+│       ├── class-tappy-email-cashback-gerado.php
+│       ├── class-tappy-email-cashback-pendente-base.php  (abstract)
+│       ├── class-tappy-email-cashback-pendente-60d.php
+│       ├── class-tappy-email-cashback-pendente-30d.php
+│       ├── class-tappy-email-cashback-pendente-7d.php
+│       └── class-tappy-email-cashback-pendente-1d.php
+├── template/emails/            ← HTML templates (override at themes/<theme>/tappy-cashback-pro/emails/)
 ├── start.sh                    ← Startup script (runs PHP built-in server)
 ├── wordpress/                  ← Full WordPress installation
 │   ├── wp-config.php           ← WordPress config (uses SQLite, dynamic URL)
@@ -61,6 +70,9 @@ This is a **WordPress plugin**, not a standalone application. It runs inside a f
 - Auto-expiry via cron with configurable intervals
 - Admin interface using WP_List_Table
 - Concurrency control for duplicate cashback prevention
+- Email notifications integrated with WooCommerce (5 emails listed in WC → Settings → Emails):
+  - "Cashback gerado" — sent when a new cashback is credited
+  - 4 reminders (60/30/7/1 days before expiry) — daily cron at 08:00 site time, only sent if user has actual pending balance; atomic claim per row to prevent duplicates
 
 ## Configuration
 
