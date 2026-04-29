@@ -1,0 +1,17 @@
+# Local WordPress test environment — not part of the plugin
+wordpress/
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs and dumps
+*.log
+*.zip
+*.tar.gz
+
+# Temp files
+/tmp/
+*.tmp
