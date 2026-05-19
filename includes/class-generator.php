@@ -4,10 +4,8 @@ if (!defined('ABSPATH')) exit;
 class Tappy_CB_Generator {
 
     public function __construct() {
-        // Gera cashback em diferentes ganchos de conclusão
+        // Gera cashback APENAS quando o pedido é marcado como "Concluído"
         add_action('woocommerce_order_status_completed', [$this, 'generate'], 10, 1);
-        add_action('woocommerce_order_status_processing', [$this, 'generate'], 10, 1);
-        add_action('woocommerce_payment_complete', [$this, 'generate'], 10, 1);
     }
 
     public function generate($order_id) {
